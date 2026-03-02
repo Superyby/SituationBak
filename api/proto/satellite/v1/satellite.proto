@@ -1,0 +1,119 @@
+syntax = "proto3";
+
+package satellite.v1;
+
+option go_package = "SituationBak/api/gen/satellite/v1;satellitev1";
+
+// 卫星服务
+service SatelliteService {
+  // 获取卫星列表
+  rpc GetSatellites(GetSatellitesRequest) returns (SatelliteListResponse);
+  // 搜索卫星
+  rpc SearchSatellites(SearchSatellitesRequest) returns (SatelliteListResponse);
+  // 获取卫星详情
+  rpc GetSatelliteByID(GetSatelliteByIDRequest) returns (SatelliteDetail);
+  // 获取卫星TLE数据
+  rpc GetSatelliteTLE(GetSatelliteTLERequest) returns (TLEResponse);
+  // 获取卫星分类
+  rpc GetCategories(GetCategoriesRequest) returns (CategoriesResponse);
+  // 获取KeepTrack卫星数据 (代理)
+  rpc GetKeepTrackSatellites(GetKeepTrackSatellitesRequest) returns (KeepTrackResponse);
+}
+
+// 获取卫星列表请求
+message GetSatellitesRequest {
+  string category = 1;
+  int32 page = 2;
+  int32 page_size = 3;
+}
+
+// 搜索卫星请求
+message SearchSatellitesRequest {
+  string query = 1;
+  int32 page = 2;
+  int32 page_size = 3;
+}
+
+// 卫星列表响应
+message SatelliteListResponse {
+  repeated SatelliteInfo satellites = 1;
+  int64 total = 2;
+  int32 page = 3;
+  int32 page_size = 4;
+}
+
+// 卫星基本信息
+message SatelliteInfo {
+  string norad_id = 1;
+  string name = 2;
+  string intl_des = 3;
+  string category = 4;
+  string country = 5;
+  string launch_date = 6;
+}
+
+// 获取卫星详情请求
+message GetSatelliteByIDRequest {
+  string norad_id = 1;
+}
+
+// 卫星详情
+message SatelliteDetail {
+  string norad_id = 1;
+  string name = 2;
+  string intl_des = 3;
+  string category = 4;
+  string country = 5;
+  string launch_date = 6;
+  string orbit_type = 7;
+  double period = 8;
+  double inclination = 9;
+  double apogee = 10;
+  double perigee = 11;
+  TLEData tle = 12;
+}
+
+// TLE数据
+message TLEData {
+  string line1 = 1;
+  string line2 = 2;
+  string epoch = 3;
+}
+
+// 获取TLE请求
+message GetSatelliteTLERequest {
+  string norad_id = 1;
+}
+
+// TLE响应
+message TLEResponse {
+  string norad_id = 1;
+  string name = 2;
+  TLEData tle = 3;
+}
+
+// 获取分类请求
+message GetCategoriesRequest {}
+
+// 分类响应
+message CategoriesResponse {
+  repeated Category categories = 1;
+}
+
+// 分类
+message Category {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  int64 count = 4;
+}
+
+// KeepTrack请求
+message GetKeepTrackSatellitesRequest {
+  string category = 1;
+}
+
+// KeepTrack响应
+message KeepTrackResponse {
+  bytes data = 1;  // JSON数据
+}

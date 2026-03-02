@@ -1,0 +1,14 @@
+# 当前已有
+.idea
+pkg
+.qoder
+
+# 可选:其他常见忽略项
+bin/          # 编译后的可执行文件
+*.exe         # Windows 可执行文件
+*.dll         # Windows 动态库
+*.so          # Linux 共享库
+*.dylib       # macOS 动态库
+*.test        # 测试二进制文件
+*.out         # 输出文件
+.DS_Store     # macOS 系统文件

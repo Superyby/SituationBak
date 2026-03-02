@@ -1,0 +1,168 @@
+version: '3.8'
+
+services:
+  # 基础设施
+  mysql:
+    image: mysql:8.0
+    container_name: situation-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: situation_bak
+      MYSQL_CHARSET: utf8mb4
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - situation-net
+
+  redis:
+    image: redis:7-alpine
+    container_name: situation-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - situation-net
+
+  consul:
+    image: consul:1.15
+    container_name: situation-consul
+    ports:
+      - "8500:8500"
+      - "8600:8600/udp"
+    command: agent -server -bootstrap-expect=1 -ui -client=0.0.0.0
+    volumes:
+      - consul_data:/consul/data
+    networks:
+      - situation-net
+
+  # 微服务
+  auth-svc:
+    build:
+      context: ../..
+      dockerfile: services/auth/Dockerfile
+    container_name: situation-auth-svc
+    ports:
+      - "50051:50051"
+    environment:
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_NAME=situation_bak
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - CONSUL_ADDRESS=consul:8500
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - situation-net
+
+  user-svc:
+    build:
+      context: ../..
+      dockerfile: services/user/Dockerfile
+    container_name: situation-user-svc
+    ports:
+      - "50052:50052"
+    environment:
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_NAME=situation_bak
+      - CONSUL_ADDRESS=consul:8500
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - situation-net
+
+  satellite-svc:
+    build:
+      context: ../..
+      dockerfile: services/satellite/Dockerfile
+    container_name: situation-satellite-svc
+    ports:
+      - "50053:50053"
+    environment:
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_NAME=situation_bak
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - CONSUL_ADDRESS=consul:8500
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - situation-net
+
+  favorite-svc:
+    build:
+      context: ../..
+      dockerfile: services/favorite/Dockerfile
+    container_name: situation-favorite-svc
+    ports:
+      - "50054:50054"
+    environment:
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_NAME=situation_bak
+      - CONSUL_ADDRESS=consul:8500
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - situation-net
+
+  gateway:
+    build:
+      context: ../..
+      dockerfile: services/gateway/Dockerfile
+    container_name: situation-gateway
+    ports:
+      - "4000:4000"
+    environment:
+      - GRPC_AUTH_ADDR=auth-svc:50051
+      - GRPC_USER_ADDR=user-svc:50052
+      - GRPC_SATELLITE_ADDR=satellite-svc:50053
+      - GRPC_FAVORITE_ADDR=favorite-svc:50054
+      - CONSUL_ADDRESS=consul:8500
+    depends_on:
+      - auth-svc
+      - user-svc
+      - satellite-svc
+      - favorite-svc
+    networks:
+      - situation-net
+
+volumes:
+  mysql_data:
+  redis_data:
+  consul_data:
+
+networks:
+  situation-net:
+    driver: bridge

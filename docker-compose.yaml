@@ -1,0 +1,88 @@
+version: '3.8'
+
+services:
+  # API 服务
+  api:
+    build: .
+    container_name: orbital-tracker-api
+    ports:
+      - "4000:4000"
+    environment:
+      - APP_ENV=production
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_USER=orbital
+      - DB_PASSWORD=orbital_password
+      - DB_NAME=orbital_tracker
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - JWT_SECRET=your-super-secret-jwt-key-min-32-chars
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    networks:
+      - orbital-network
+    restart: unless-stopped
+
+  # MySQL 数据库
+  mysql:
+    image: mysql:8.0
+    container_name: orbital-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: orbital_tracker
+      MYSQL_USER: orbital
+      MYSQL_PASSWORD: orbital_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./migrations:/docker-entrypoint-initdb.d
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+    networks:
+      - orbital-network
+    restart: unless-stopped
+
+  # Redis 缓存
+  redis:
+    image: redis:7-alpine
+    container_name: orbital-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    networks:
+      - orbital-network
+    restart: unless-stopped
+
+  # ClickHouse 分析数据库（可选）
+  clickhouse:
+    image: clickhouse/clickhouse-server:latest
+    container_name: orbital-clickhouse
+    ports:
+      - "8123:8123"
+      - "9000:9000"
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
+    environment:
+      - CLICKHOUSE_USER=default
+      - CLICKHOUSE_PASSWORD=
+    networks:
+      - orbital-network
+    restart: unless-stopped
+
+networks:
+  orbital-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+  redis_data:
+  clickhouse_data:

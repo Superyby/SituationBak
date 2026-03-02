@@ -1,0 +1,10 @@
+go 1.22
+
+use (
+	.
+	./services/auth
+	./services/favorite
+	./services/gateway
+	./services/satellite
+	./services/user
+)

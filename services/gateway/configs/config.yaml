@@ -1,0 +1,48 @@
+app:
+  name: gateway
+  env: development
+  port: 4000
+  debug: true
+  version: 1.0.0
+
+grpc:
+  auth_addr: localhost:50051
+  user_addr: localhost:50052
+  satellite_addr: localhost:50053
+  favorite_addr: localhost:50054
+
+log:
+  level: debug
+  format: console
+  output: stdout
+  file_path: ""
+
+cors:
+  allowed_origins:
+    - "*"
+  allowed_methods:
+    - GET
+    - POST
+    - PUT
+    - DELETE
+    - OPTIONS
+  allowed_headers:
+    - Content-Type
+    - Authorization
+  expose_headers: []
+  allow_credentials: true
+  max_age: 86400
+
+ratelimit:
+  requests_per_second: 100
+  burst: 200
+
+consul:
+  address: localhost:8500
+  datacenter: dc1
+  token: ""
+
+jwt:
+  secret: your-jwt-secret-key-change-in-production
+  expire_hours: 24
+  refresh_expire_hours: 168

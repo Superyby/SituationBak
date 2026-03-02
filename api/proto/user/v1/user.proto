@@ -1,0 +1,90 @@
+syntax = "proto3";
+
+package user.v1;
+
+option go_package = "SituationBak/api/gen/user/v1;userv1";
+
+// 用户服务
+service UserService {
+  // 获取用户资料
+  rpc GetProfile(GetProfileRequest) returns (ProfileResponse);
+  // 更新用户资料
+  rpc UpdateProfile(UpdateProfileRequest) returns (ProfileResponse);
+  // 修改密码
+  rpc ChangePassword(ChangePasswordRequest) returns (ChangePasswordResponse);
+  // 获取用户设置
+  rpc GetSettings(GetSettingsRequest) returns (SettingsResponse);
+  // 更新用户设置
+  rpc UpdateSettings(UpdateSettingsRequest) returns (SettingsResponse);
+}
+
+// 获取资料请求
+message GetProfileRequest {
+  uint64 user_id = 1;
+}
+
+// 更新资料请求
+message UpdateProfileRequest {
+  uint64 user_id = 1;
+  string username = 2;
+  string email = 3;
+  string avatar_url = 4;
+}
+
+// 资料响应
+message ProfileResponse {
+  uint64 id = 1;
+  string username = 2;
+  string email = 3;
+  string role = 4;
+  string avatar_url = 5;
+  string created_at = 6;
+  string last_login_at = 7;
+}
+
+// 修改密码请求
+message ChangePasswordRequest {
+  uint64 user_id = 1;
+  string old_password = 2;
+  string new_password = 3;
+}
+
+// 修改密码响应
+message ChangePasswordResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// 获取设置请求
+message GetSettingsRequest {
+  uint64 user_id = 1;
+}
+
+// 更新设置请求
+message UpdateSettingsRequest {
+  uint64 user_id = 1;
+  string theme = 2;
+  string language = 3;
+  string timezone = 4;
+  bool notifications_enabled = 5;
+  bool email_notifications = 6;
+  string default_view = 7;
+  int32 map_refresh_interval = 8;
+  bool show_satellite_labels = 9;
+  bool show_orbit_paths = 10;
+}
+
+// 设置响应
+message SettingsResponse {
+  uint64 id = 1;
+  uint64 user_id = 2;
+  string theme = 3;
+  string language = 4;
+  string timezone = 5;
+  bool notifications_enabled = 6;
+  bool email_notifications = 7;
+  string default_view = 8;
+  int32 map_refresh_interval = 9;
+  bool show_satellite_labels = 10;
+  bool show_orbit_paths = 11;
+}

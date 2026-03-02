@@ -1,0 +1,84 @@
+syntax = "proto3";
+
+package favorite.v1;
+
+option go_package = "SituationBak/api/gen/favorite/v1;favoritev1";
+
+// 收藏服务
+service FavoriteService {
+  // 获取收藏列表
+  rpc GetFavorites(GetFavoritesRequest) returns (FavoriteListResponse);
+  // 添加收藏
+  rpc AddFavorite(AddFavoriteRequest) returns (FavoriteResponse);
+  // 删除收藏
+  rpc DeleteFavorite(DeleteFavoriteRequest) returns (DeleteFavoriteResponse);
+  // 检查是否已收藏
+  rpc IsFavorite(IsFavoriteRequest) returns (IsFavoriteResponse);
+}
+
+// 获取收藏列表请求
+message GetFavoritesRequest {
+  uint64 user_id = 1;
+  int32 page = 2;
+  int32 page_size = 3;
+}
+
+// 收藏列表响应
+message FavoriteListResponse {
+  repeated FavoriteItem favorites = 1;
+  int64 total = 2;
+  int32 page = 3;
+  int32 page_size = 4;
+}
+
+// 收藏项
+message FavoriteItem {
+  uint64 id = 1;
+  uint64 user_id = 2;
+  string satellite_id = 3;
+  string satellite_name = 4;
+  string notes = 5;
+  string created_at = 6;
+}
+
+// 添加收藏请求
+message AddFavoriteRequest {
+  uint64 user_id = 1;
+  string satellite_id = 2;
+  string satellite_name = 3;
+  string notes = 4;
+}
+
+// 收藏响应
+message FavoriteResponse {
+  uint64 id = 1;
+  uint64 user_id = 2;
+  string satellite_id = 3;
+  string satellite_name = 4;
+  string notes = 5;
+  string created_at = 6;
+}
+
+// 删除收藏请求
+message DeleteFavoriteRequest {
+  uint64 id = 1;
+  uint64 user_id = 2;
+}
+
+// 删除收藏响应
+message DeleteFavoriteResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// 检查是否收藏请求
+message IsFavoriteRequest {
+  uint64 user_id = 1;
+  string satellite_id = 2;
+}
+
+// 检查是否收藏响应
+message IsFavoriteResponse {
+  bool is_favorite = 1;
+  uint64 favorite_id = 2;
+}

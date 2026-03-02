@@ -1,0 +1,88 @@
+# Orbital Tracker API 配置文件
+
+# 应用配置
+app:
+  name: "Orbital Tracker API"
+  env: "development" # development | test | production
+  port: 4000
+  debug: true
+
+# MySQL 数据库配置
+database:
+  host: "192.168.31.103"
+  port: 3306
+  user: "root"
+  password: "123456"
+  dbname: "spacerod_orbit_server"
+  charset: "utf8mb4"
+  max_open_conns: 100
+  max_idle_conns: 10
+  conn_max_lifetime: 3600 # 秒
+
+# Redis 配置
+redis:
+  host: "192.168.31.103"
+  port: 6379
+  password: ""
+  db: 0
+  pool_size: 100
+
+# ClickHouse 配置
+clickhouse:
+  host: "192.168.31.103"
+  port: 8123
+  database: "default"
+  username: "default"
+  password: "123456"
+
+# JWT 配置
+jwt:
+  secret: "your-secret-key-min-32-chars-long!!"
+  expire_hours: 24
+  refresh_expire_hours: 168 # 7 天
+
+# 日志配置
+log:
+  level: "debug" # debug | info | warn | error
+  format: "json" # json | text
+  output: "stdout" # stdout | file
+  file_path: "./logs/app.log"
+
+# 限流配置
+ratelimit:
+  requests_per_second: 100
+  burst: 200
+
+# 第三方 API（Mock 模式）
+external:
+  keeptrack:
+    base_url: "https://api.keeptrack.space/v2"
+    timeout: 30 # 秒
+  spacetrack:
+    base_url: "https://www.space-track.org"
+    username: "" # Space-Track 账号
+    password: "" # Space-Track 密码
+    timeout: 120 # 秒
+
+# CORS 配置
+cors:
+  allowed_origins:
+    - "http://localhost:5544"
+    - "http://localhost:3000"
+    - "https://your-domain.com"
+  allowed_methods:
+    - "GET"
+    - "POST"
+    - "PUT"
+    - "DELETE"
+    - "PATCH"
+    - "OPTIONS"
+  allowed_headers:
+    - "Origin"
+    - "Content-Type"
+    - "Authorization"
+    - "Accept"
+  expose_headers:
+    - "Content-Length"
+  allow_credentials: true
+  max_age: 86400 # 秒

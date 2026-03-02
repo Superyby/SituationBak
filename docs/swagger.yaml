@@ -1,0 +1,517 @@
+basePath: /api/v1
+definitions:
+  SituationBak_internal_dto_request.AddFavoriteRequest:
+    properties:
+      norad_id:
+        type: integer
+      notes:
+        maxLength: 500
+        type: string
+      satellite_name:
+        maxLength: 100
+        type: string
+    required:
+    - norad_id
+    type: object
+  SituationBak_internal_dto_request.ChangePasswordRequest:
+    properties:
+      new_password:
+        maxLength: 50
+        minLength: 6
+        type: string
+      old_password:
+        type: string
+    required:
+    - new_password
+    - old_password
+    type: object
+  SituationBak_internal_dto_request.LoginRequest:
+    properties:
+      password:
+        type: string
+      username:
+        description: 支持用户名或邮箱
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  SituationBak_internal_dto_request.RefreshTokenRequest:
+    properties:
+      refresh_token:
+        type: string
+    required:
+    - refresh_token
+    type: object
+  SituationBak_internal_dto_request.RegisterRequest:
+    properties:
+      email:
+        type: string
+      password:
+        maxLength: 50
+        minLength: 6
+        type: string
+      username:
+        maxLength: 50
+        minLength: 3
+        type: string
+    required:
+    - email
+    - password
+    - username
+    type: object
+  SituationBak_internal_dto_request.UpdateProfileRequest:
+    properties:
+      avatar_url:
+        maxLength: 255
+        type: string
+      email:
+        type: string
+      username:
+        maxLength: 50
+        minLength: 3
+        type: string
+    type: object
+  SituationBak_internal_dto_request.UpdateSettingsRequest:
+    properties:
+      language:
+        enum:
+        - zh-CN
+        - en-US
+        type: string
+      satellite_limit:
+        maximum: 50000
+        minimum: 100
+        type: integer
+      show_debris:
+        type: boolean
+      theme:
+        enum:
+        - dark
+        - light
+        - auto
+        type: string
+    type: object
+  SituationBak_internal_pkg_utils.Response:
+    properties:
+      code:
+        type: integer
+      data: {}
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+host: localhost:4000
+info:
+  contact:
+    email: support@orbital-tracker.com
+    name: API Support
+  description: 轨道追踪器后端 API 服务，提供卫星数据查询、用户认证、收藏管理等功能
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  termsOfService: http://swagger.io/terms/
+  title: Orbital Tracker API
+  version: 1.0.0
+paths:
+  /api/v1/auth/login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 登录信息
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/SituationBak_internal_dto_request.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/SituationBak_internal_pkg_utils.Response'
+      summary: 用户登录
+      tags:
+      - 认证
+  /api/v1/auth/logout:
+    post:
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/SituationBak_internal_pkg_utils.Response'
+      security:
+      - Bearer: []
+      summary: 用户登出
+      tags:
+      - 认证
+  /api/v1/auth/me:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/SituationBak_internal_pkg_utils.Response'
+      security:
+      - Bearer: []
+      summary: 获取当前用户信息
+      tags:
+      - 认证
+  /api/v1/auth/refresh:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 刷新Token
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/SituationBak_internal_dto_request.RefreshTokenRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/SituationBak_internal_pkg_utils.Response'
+      summary: 刷新Token
+      tags:
+      - 认证
+  /api/v1/auth/register:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 注册信息
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/SituationBak_internal_dto_request.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/SituationBak_internal_pkg_utils.Response'
+      summary: 用户注册
+      tags:
+      - 认证
+  /api/v1/favorites:
+    get:
+      parameters:
+      - default: 1
+        description: 页码
+        in: query
+        name: page
+        type: integer
+      - default: 20
+        description: 每页数量
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/SituationBak_internal_pkg_utils.Response'
+      security:
+      - Bearer: []
+      summary: 获取收藏列表
+      tags:
+      - 收藏
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 收藏信息
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/SituationBak_internal_dto_request.AddFavoriteRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/SituationBak_internal_pkg_utils.Response'
+      security:
+      - Bearer: []
+      summary: 添加收藏
+      tags:
+      - 收藏
+  /api/v1/favorites/{id}:
+    delete:
+      parameters:
+      - description: 收藏ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/SituationBak_internal_pkg_utils.Response'
+      security:
+      - Bearer: []
+      summary: 删除收藏
+      tags:
+      - 收藏
+  /api/v1/proxy/keeptrack/sats:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/SituationBak_internal_pkg_utils.Response'
+      summary: 获取KeepTrack卫星数据（Mock模式）
+      tags:
+      - 代理
+  /api/v1/proxy/spacetrack/login:
+    post:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/SituationBak_internal_pkg_utils.Response'
+      security:
+      - Bearer: []
+      summary: Space-Track登录（Mock模式）
+      tags:
+      - 代理
+  /api/v1/proxy/spacetrack/tle:
+    get:
+      parameters:
+      - description: NORAD ID列表，逗号分隔
+        in: query
+        name: norad_ids
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/SituationBak_internal_pkg_utils.Response'
+      security:
+      - Bearer: []
+      summary: 获取Space-Track TLE数据（Mock模式）
+      tags:
+      - 代理
+  /api/v1/satellites:
+    get:
+      parameters:
+      - default: 1
+        description: 页码
+        in: query
+        name: page
+        type: integer
+      - default: 20
+        description: 每页数量
+        in: query
+        name: page_size
+        type: integer
+      - description: 分类
+        in: query
+        name: category
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/SituationBak_internal_pkg_utils.Response'
+      summary: 获取卫星列表
+      tags:
+      - 卫星
+  /api/v1/satellites/{id}:
+    get:
+      parameters:
+      - description: NORAD ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/SituationBak_internal_pkg_utils.Response'
+      summary: 获取卫星详情
+      tags:
+      - 卫星
+  /api/v1/satellites/{id}/tle:
+    get:
+      parameters:
+      - description: NORAD ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/SituationBak_internal_pkg_utils.Response'
+      summary: 获取卫星TLE数据
+      tags:
+      - 卫星
+  /api/v1/satellites/categories:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/SituationBak_internal_pkg_utils.Response'
+      summary: 获取卫星分类列表
+      tags:
+      - 卫星
+  /api/v1/satellites/search:
+    get:
+      parameters:
+      - description: 搜索关键词
+        in: query
+        name: q
+        required: true
+        type: string
+      - default: 1
+        description: 页码
+        in: query
+        name: page
+        type: integer
+      - default: 20
+        description: 每页数量
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/SituationBak_internal_pkg_utils.Response'
+      summary: 搜索卫星
+      tags:
+      - 卫星
+  /api/v1/user/password:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: 密码信息
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/SituationBak_internal_dto_request.ChangePasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/SituationBak_internal_pkg_utils.Response'
+      security:
+      - Bearer: []
+      summary: 修改密码
+      tags:
+      - 用户
+  /api/v1/user/profile:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/SituationBak_internal_pkg_utils.Response'
+      security:
+      - Bearer: []
+      summary: 获取用户资料
+      tags:
+      - 用户
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: 更新信息
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/SituationBak_internal_dto_request.UpdateProfileRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/SituationBak_internal_pkg_utils.Response'
+      security:
+      - Bearer: []
+      summary: 更新用户资料
+      tags:
+      - 用户
+  /api/v1/user/settings:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/SituationBak_internal_pkg_utils.Response'
+      security:
+      - Bearer: []
+      summary: 获取用户设置
+      tags:
+      - 用户
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: 设置信息
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/SituationBak_internal_dto_request.UpdateSettingsRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/SituationBak_internal_pkg_utils.Response'
+      security:
+      - Bearer: []
+      summary: 更新用户设置
+      tags:
+      - 用户
+securityDefinitions:
+  Bearer:
+    description: JWT 认证令牌，格式：Bearer {token}
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
