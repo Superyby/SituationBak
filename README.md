@@ -116,3 +116,12 @@ SituationBak/
 - 特定服务的 HTTP Handler
 - 特定服务的路由配置
 - 不希望被其他包导入的实现细节
+
+
+这是一个微服务架构，使用 gRPC 进行服务间通信：
+- Gateway ：API 网关，接收 HTTP 请求，通过 gRPC 调用后端服务
+- Auth Service ：认证服务
+- User Service ：用户服务
+- Satellite Service ：卫星服务
+- Favorite Service ：收藏服务
+每个服务都通过 proto 文件定义的接口进行通信，实现了服务解耦和类型安全。
