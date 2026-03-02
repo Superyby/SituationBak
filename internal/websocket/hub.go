@@ -23,7 +23,7 @@ type Hub struct {
 	// 客户端注销通道
 	unregister chan *Client
 
-	// 互斥�?
+	// 互斥锁
 	mu sync.RWMutex
 }
 
@@ -155,14 +155,14 @@ func (h *Hub) Broadcast(message *Message) {
 	h.broadcast <- message
 }
 
-// GetClientCount 获取当前连接�?
+// GetClientCount 获取当前连接数
 func (h *Hub) GetClientCount() int {
 	h.mu.RLock()
 	defer h.mu.RUnlock()
 	return len(h.clients)
 }
 
-// GetSubscriberCount 获取指定卫星的订阅者数�?
+// GetSubscriberCount 获取指定卫星的订阅者数量
 func (h *Hub) GetSubscriberCount(noradID int) int {
 	h.mu.RLock()
 	defer h.mu.RUnlock()

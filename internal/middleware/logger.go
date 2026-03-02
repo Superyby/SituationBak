@@ -8,7 +8,7 @@ import (
 	"github.com/gofiber/fiber/v3"
 )
 
-// LoggerMiddleware 请求日志中间�?
+// LoggerMiddleware 请求日志中间件
 func LoggerMiddleware() fiber.Handler {
 	return func(c fiber.Ctx) error {
 		start := time.Now()

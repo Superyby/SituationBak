@@ -2,6 +2,7 @@ package logger
 
 import (
 	"os"
+	"time"
 
 	"SituationBak/shared/config"
 
@@ -139,3 +140,153 @@ func Err(err error) zap.Field {
 func Any(key string, val interface{}) zap.Field {
 	return zap.Any(key, val)
 }
+
+// Duration 时间间隔字段
+func Duration(key string, val time.Duration) zap.Field {
+	return zap.Duration(key, val)
+}
+
+// ==================== 链路追踪相关字段 ====================
+
+// TraceID 链路追踪ID字段
+func TraceID(traceID string) zap.Field {
+	return zap.String("trace_id", traceID)
+}
+
+// UserID 用户ID字段
+func UserID(userID uint) zap.Field {
+	return zap.Uint("user_id", userID)
+}
+
+// Username 用户名字段
+func Username(username string) zap.Field {
+	return zap.String("username", username)
+}
+
+// RequestID 请求ID字段
+func RequestID(requestID string) zap.Field {
+	return zap.String("request_id", requestID)
+}
+
+// ==================== HTTP 相关字段 ====================
+
+// Method HTTP 方法字段
+func Method(method string) zap.Field {
+	return zap.String("method", method)
+}
+
+// Path 请求路径字段
+func Path(path string) zap.Field {
+	return zap.String("path", path)
+}
+
+// Status HTTP 状态码字段
+func Status(status int) zap.Field {
+	return zap.Int("status", status)
+}
+
+// Latency 请求延迟字段
+func Latency(latency time.Duration) zap.Field {
+	return zap.Duration("latency", latency)
+}
+
+// IP 客户端IP字段
+func IP(ip string) zap.Field {
+	return zap.String("ip", ip)
+}
+
+// UserAgent 用户代理字段
+func UserAgent(ua string) zap.Field {
+	return zap.String("user_agent", ua)
+}
+
+// ==================== 业务相关字段 ====================
+
+// Module 模块名称字段
+func Module(module string) zap.Field {
+	return zap.String("module", module)
+}
+
+// Action 操作名称字段
+func Action(action string) zap.Field {
+	return zap.String("action", action)
+}
+
+// Resource 资源名称字段
+func Resource(resource string) zap.Field {
+	return zap.String("resource", resource)
+}
+
+// ResourceID 资源ID字段
+func ResourceID(id string) zap.Field {
+	return zap.String("resource_id", id)
+}
+
+// ==================== 带上下文的日志函数 ====================
+
+// WithFields 返回一个带字段的日志器
+func WithFields(fields ...zap.Field) *zap.Logger {
+	return log.With(fields...)
+}
+
+// WithTraceID 返回一个带 TraceID 的日志器
+func WithTraceID(traceID string) *zap.Logger {
+	return log.With(TraceID(traceID))
+}
+
+// WithUser 返回一个带用户信息的日志器
+func WithUser(userID uint, username string) *zap.Logger {
+	return log.With(UserID(userID), Username(username))
+}
+
+// WithContext 返回一个带完整上下文的日志器
+func WithContext(traceID string, userID uint, username string) *zap.Logger {
+	return log.With(TraceID(traceID), UserID(userID), Username(username))
+}
+
+// ==================== 时间相关字段 ====================
+
+// Time 时间字段
+func Time(key string, val time.Time) zap.Field {
+	return zap.Time(key, val)
+}
+
+// Timestamp 时间戳字段（Unix秒）
+func Timestamp(key string, val int64) zap.Field {
+	return zap.Int64(key, val)
+}
+
+// ==================== 数组和对象字段 ====================
+
+// Strings 字符串数组字段
+func Strings(key string, val []string) zap.Field {
+	return zap.Strings(key, val)
+}
+
+// Ints 整数数组字段
+func Ints(key string, val []int) zap.Field {
+	return zap.Ints(key, val)
+}
+
+// Object 对象字段（使用 JSON 序列化）
+func Object(key string, val zapcore.ObjectMarshaler) zap.Field {
+	return zap.Object(key, val)
+}
+
+// ==================== 辅助函数 ====================
+
+// GetLogger 获取底层 zap.Logger
+func GetLogger() *zap.Logger {
+	return log
+}
+
+// SetLogger 设置底层 zap.Logger（用于测试）
+func SetLogger(l *zap.Logger) {
+	log = l
+}
+
+// NewNop 创建一个空的日志器（用于测试）
+func NewNop() *zap.Logger {
+	return zap.NewNop()
+}
+

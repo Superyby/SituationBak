@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	// 写超�?
+	// 写超时
 	writeWait = 10 * time.Second
 
 	// Pong超时
@@ -22,13 +22,13 @@ const (
 	maxMessageSize = 512 * 1024 // 512KB
 )
 
-// Client WebSocket客户�?
+// Client WebSocket客户端
 type Client struct {
 	hub           *Hub
 	conn          *websocket.Conn
 	send          chan *Message
 	userID        uint
-	subscriptions map[int]bool // 订阅的卫�?noradID
+	subscriptions map[int]bool // 订阅的卫星noradID
 }
 
 // NewClient 创建新客户端
@@ -152,10 +152,10 @@ func (c *Client) handleSubscribe(msg *Message) {
 
 	c.hub.Subscribe(c, payload.NoradIDs)
 
-	// 发送确认消�?
+	// 发送确认消息
 	confirmMsg, _ := NewMessage(MessageTypeNotification, &NotificationPayload{
 		Title:   "订阅成功",
-		Message: "已成功订阅卫星数�?,
+		Message: "已成功订阅卫星数据",
 		Level:   "info",
 	})
 	c.send <- confirmMsg
@@ -171,16 +171,16 @@ func (c *Client) handleUnsubscribe(msg *Message) {
 
 	c.hub.Unsubscribe(c, payload.NoradIDs)
 
-	// 发送确认消�?
+	// 发送确认消息
 	confirmMsg, _ := NewMessage(MessageTypeNotification, &NotificationPayload{
 		Title:   "取消订阅成功",
-		Message: "已成功取消订�?,
+		Message: "已成功取消订阅",
 		Level:   "info",
 	})
 	c.send <- confirmMsg
 }
 
-// sendError 发送错误消�?
+// sendError 发送错误消息
 func (c *Client) sendError(code int, message string) {
 	errMsg, _ := NewMessage(MessageTypeError, &ErrorPayload{
 		Code:    code,
@@ -189,7 +189,7 @@ func (c *Client) sendError(code int, message string) {
 	c.send <- errMsg
 }
 
-// SendSatelliteUpdate 发送卫星更�?
+// SendSatelliteUpdate 发送卫星更新
 func (c *Client) SendSatelliteUpdate(satellites []SatellitePosition) {
 	msg, _ := NewMessage(MessageTypeSatelliteUpdate, &SatelliteUpdatePayload{
 		Satellites: satellites,

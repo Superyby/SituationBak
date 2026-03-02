@@ -18,16 +18,20 @@ const (
 	CodeServiceUnavailable = 503
 
 	// 业务错误码
-	CodeInvalidParams    = 1000
-	CodeUsernameExist    = 1001
-	CodeEmailExists      = 1002
-	CodeLoginFailed      = 1003
-	CodePasswordWrong    = 1004
-	CodeTokenInvalid     = 1005
-	CodeTokenExpired     = 1006
-	CodeUserNotFound     = 1007
-	CodePermissionDenied = 1008
-	CodeAlreadyExists    = 1009
+	CodeInvalidParams     = 1000
+	CodeUsernameExist     = 1001
+	CodeEmailExists       = 1002
+	CodeLoginFailed       = 1003
+	CodePasswordWrong     = 1004
+	CodeTokenInvalid      = 1005
+	CodeTokenExpired      = 1006
+	CodeUserNotFound      = 1007
+	CodePermissionDenied  = 1008
+	CodeAlreadyExists     = 1009
+	CodeSatelliteNotFound = 1010
+	CodeFavoriteNotFound  = 1011
+	CodeFavoriteExists    = 1012
+	CodeTooManyRequests   = 1013
 )
 
 // AppError 应用错误
@@ -115,6 +119,11 @@ func ErrTokenExpired() *AppError {
 	return New(CodeTokenExpired, "Token已过期")
 }
 
+// ErrPasswordWrong 密码错误
+func ErrPasswordWrong() *AppError {
+	return New(CodePasswordWrong, "密码错误")
+}
+
 // codeToMessage 错误码转消息
 func codeToMessage(code int) string {
 	messages := map[int]string{
@@ -136,6 +145,10 @@ func codeToMessage(code int) string {
 		CodeUserNotFound:       "用户不存在",
 		CodePermissionDenied:   "权限不足",
 		CodeAlreadyExists:      "资源已存在",
+		CodeSatelliteNotFound:  "卫星未找到",
+		CodeFavoriteNotFound:   "收藏未找到",
+		CodeFavoriteExists:     "已收藏该卫星",
+		CodeTooManyRequests:    "请求过于频繁",
 	}
 
 	if msg, ok := messages[code]; ok {

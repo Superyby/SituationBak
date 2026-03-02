@@ -14,7 +14,7 @@ import (
 type rateLimiter struct {
 	tokens     float64
 	maxTokens  float64
-	refillRate float64 // 每秒补充的token�?
+	refillRate float64 // 每秒补充的token数
 	lastRefill time.Time
 	mu         sync.Mutex
 }
@@ -24,7 +24,7 @@ var (
 	limiterMu sync.Mutex
 )
 
-// RateLimitMiddleware 限流中间�?
+// RateLimitMiddleware 限流中间件
 func RateLimitMiddleware() fiber.Handler {
 	cfg := config.GlobalConfig.RateLimit
 
@@ -52,7 +52,7 @@ func RateLimitMiddleware() fiber.Handler {
 	}
 }
 
-// allow 检查是否允许请�?
+// allow 检查是否允许请求
 func (r *rateLimiter) allow() bool {
 	r.mu.Lock()
 	defer r.mu.Unlock()
@@ -76,7 +76,7 @@ func (r *rateLimiter) allow() bool {
 	return false
 }
 
-// CleanupLimiters 清理过期的限流器（可在定时任务中调用�?
+// CleanupLimiters 清理过期的限流器（可在定时任务中调用）
 func CleanupLimiters() {
 	limiterMu.Lock()
 	defer limiterMu.Unlock()

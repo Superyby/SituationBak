@@ -37,7 +37,7 @@ type Claims struct {
 
 // Register 用户注册
 func (s *AuthService) Register(req *request.RegisterRequest) (*response.LoginResponse, error) {
-	// 检查用户名是否已存�?
+	// 检查用户名是否已存在
 	exists, err := s.userRepo.ExistsByUsername(req.Username)
 	if err != nil {
 		return nil, errors.ErrInternal(err)
@@ -97,12 +97,12 @@ func (s *AuthService) Login(req *request.LoginRequest) (*response.LoginResponse,
 		return nil, errors.WithCode(errors.CodePasswordWrong)
 	}
 
-	// 检查用户状�?
+	// 检查用户状态
 	if !user.IsActive {
 		return nil, errors.New(errors.CodeForbidden, "账号已被禁用")
 	}
 
-	// 更新最后登录时�?
+	// 更新最后登录时间
 	_ = s.userRepo.UpdateLastLogin(user.ID)
 
 	// 生成Token

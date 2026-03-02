@@ -67,3 +67,52 @@ SituationBak/
 2. 运行 make infra-up 启动基础设施
 3. 完善 user-svc, satellite-svc, favorite-svc 的业务逻辑
 4. 运行 make docker-up 启动所有服务
+
+
+## 区分
+SituationBak/
+├── internal/           # 网关服务私有代码
+│   ├── handler/        # HTTP 处理器（业务逻辑入口）
+│   ├── service/        # 业务服务层
+│   ├── repository/     # 数据访问层（可重导出 shared）
+│   ├── middleware/     # 网关特有的中间件
+│   ├── config/         # 重导出 shared/config + 本地扩展
+│   ├── model/          # 重导出 shared/model
+│   ├── websocket/      # WebSocket 处理（网关特有）
+│   └── router/         # 路由配置
+│
+├── shared/             # 所有微服务共享的基础代码
+│   ├── config/         # 通用配置结构
+│   ├── model/          # 数据模型定义
+│   ├── database/       # 数据库连接封装
+│   ├── logger/         # 统一日志组件
+│   ├── errors/         # 统一错误码
+│   ├── constants/      # 公共常量
+│   ├── middleware/     # 通用中间件（如链路追踪）
+│   ├── validator/      # 请求验证器
+│   ├── graceful/       # 优雅关闭
+│   └── utils/          # 工具函数
+│
+└── services/           # 各微服务
+    ├── auth/           # 认证服务 → 引用 shared/
+    ├── user/           # 用户服务 → 引用 shared/
+    ├── satellite/      # 卫星服务 → 引用 shared/
+    └── gateway/        # 网关服务 → 引用 shared/
+
+
+使用原则
+
+放入 shared/ 的情况：
+- 多个微服务都需要使用的代码
+- 数据模型定义（保证数据结构一致）
+- 基础设施组件（日志、数据库、缓存）
+- 通用工具函数和常量
+- 错误码定义（保证错误处理一致）
+
+
+
+放入 internal/ 的情况：
+- 仅当前服务使用的业务逻辑
+- 特定服务的 HTTP Handler
+- 特定服务的路由配置
+- 不希望被其他包导入的实现细节

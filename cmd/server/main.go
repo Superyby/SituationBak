@@ -9,6 +9,8 @@ import (
 	"SituationBak/internal/config"
 	"SituationBak/internal/repository"
 	"SituationBak/internal/router"
+	"SituationBak/shared/constants"
+	"SituationBak/shared/graceful"
 	"SituationBak/shared/logger"
 
 	"github.com/gofiber/fiber/v3"
@@ -18,7 +20,7 @@ import (
 
 // @title Orbital Tracker API
 // @version 1.0.0
-// @description 轨道追踪器后API 服务，提供卫星数据查询、用户认证、收藏管理等功能
+// @description 轨道追踪器后端API 服务，提供卫星数据查询、用户认证、收藏管理等功能
 // @termsOfService http://swagger.io/terms/
 
 // @contact.name API Support
@@ -51,6 +53,8 @@ func main() {
 	defer logger.Sync()
 
 	logger.Info("Starting Orbital Tracker API",
+		logger.String("app", constants.AppName),
+		logger.String("version", constants.AppVersion),
 		logger.String("env", cfg.App.Env),
 		logger.Int("port", cfg.App.Port),
 	)
@@ -60,6 +64,9 @@ func main() {
 		logger.Fatal("初始化MySQL失败", logger.Err(err))
 	}
 	logger.Info("MySQL connected successfully")
+
+	// 注册数据库到优雅关闭管理器
+	graceful.Register("mysql", &dbCloser{})
 
 	// 自动迁移数据库表
 	if err := repository.AutoMigrate(); err != nil {
@@ -72,6 +79,7 @@ func main() {
 		logger.Warn("初始化Redis失败，部分缓存功能将不可用", logger.Err(err))
 	} else {
 		logger.Info("Redis connected successfully")
+		graceful.Register("redis", &redisCloser{})
 	}
 
 	// 创建Fiber应用
@@ -95,7 +103,7 @@ func main() {
 		}
 	}()
 
-	// 启动服务�?
+	// 启动服务器
 	addr := fmt.Sprintf(":%d", cfg.App.Port)
 	logger.Info("Server starting", logger.String("address", addr))
 
@@ -103,12 +111,26 @@ func main() {
 		logger.Fatal("Server failed to start", logger.Err(err))
 	}
 
-	// 关闭数据库连�?
-	if err := repository.Close(); err != nil {
-		logger.Error("Error closing database connections", logger.Err(err))
+	// 优雅关闭所有资源
+	if err := graceful.Close(); err != nil {
+		logger.Error("Error closing resources", logger.Err(err))
 	}
 
 	logger.Info("Server stopped")
+}
+
+// dbCloser 数据库关闭器
+type dbCloser struct{}
+
+func (c *dbCloser) Close() error {
+	return repository.CloseMySQL()
+}
+
+// redisCloser Redis关闭器
+type redisCloser struct{}
+
+func (c *redisCloser) Close() error {
+	return repository.CloseRedis()
 }
 
 // customErrorHandler 自定义错误处理器
