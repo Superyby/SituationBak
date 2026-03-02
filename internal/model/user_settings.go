@@ -61,7 +61,7 @@ func (s *SettingsJSON) Scan(value interface{}) error {
 	return json.Unmarshal(bytes, s)
 }
 
-// BeforeUpdate 更新前钩子
+// BeforeUpdate 更新前钩�?
 func (u *UserSettings) BeforeUpdate(tx *gorm.DB) error {
 	u.UpdatedAt = time.Now()
 	return nil

@@ -3,8 +3,8 @@ package service
 import (
 	"SituationBak/internal/dto/request"
 	"SituationBak/internal/dto/response"
-	"SituationBak/internal/pkg/errors"
-	"SituationBak/internal/pkg/utils"
+	"SituationBak/shared/errors"
+	"SituationBak/shared/utils"
 	"SituationBak/internal/repository"
 )
 
@@ -55,7 +55,7 @@ func (s *UserService) UpdateProfile(userID uint, req *request.UpdateProfileReque
 		return nil, errors.ErrUserNotFound()
 	}
 
-	// 检查用户名是否被占用
+	// 检查用户名是否被占�?
 	if req.Username != "" && req.Username != user.Username {
 		exists, err := s.userRepo.ExistsByUsername(req.Username)
 		if err != nil {
@@ -111,12 +111,12 @@ func (s *UserService) ChangePassword(userID uint, req *request.ChangePasswordReq
 		return errors.ErrUserNotFound()
 	}
 
-	// 验证旧密码
+	// 验证旧密�?
 	if !utils.CheckPassword(req.OldPassword, user.PasswordHash) {
 		return errors.ErrPasswordWrong()
 	}
 
-	// 加密新密码
+	// 加密新密�?
 	hashedPassword, err := utils.HashPassword(req.NewPassword)
 	if err != nil {
 		return errors.ErrInternal(err)

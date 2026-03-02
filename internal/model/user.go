@@ -41,14 +41,14 @@ func (u *User) IsAdmin() bool {
 	return u.Role == RoleAdmin
 }
 
-// BeforeCreate 创建前钩子
+// BeforeCreate 创建前钩�?
 func (u *User) BeforeCreate(tx *gorm.DB) error {
 	u.CreatedAt = time.Now()
 	u.UpdatedAt = time.Now()
 	return nil
 }
 
-// BeforeUpdate 更新前钩子
+// BeforeUpdate 更新前钩�?
 func (u *User) BeforeUpdate(tx *gorm.DB) error {
 	u.UpdatedAt = time.Now()
 	return nil

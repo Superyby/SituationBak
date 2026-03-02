@@ -5,18 +5,18 @@ import (
 
 	"SituationBak/internal/dto/request"
 	"SituationBak/internal/middleware"
-	"SituationBak/internal/pkg/errors"
-	"SituationBak/internal/pkg/utils"
+	"SituationBak/shared/errors"
+	"SituationBak/shared/utils"
 	"SituationBak/internal/service"
 	"github.com/gofiber/fiber/v3"
 )
 
-// FavoriteHandler 收藏处理器
+// FavoriteHandler 收藏处理�?
 type FavoriteHandler struct {
 	satelliteService *service.SatelliteService
 }
 
-// NewFavoriteHandler 创建收藏处理器实例
+// NewFavoriteHandler 创建收藏处理器实�?
 func NewFavoriteHandler() *FavoriteHandler {
 	return &FavoriteHandler{
 		satelliteService: service.NewSatelliteService(),

@@ -3,7 +3,7 @@ package repository
 import (
 	"errors"
 
-	"SituationBak/pkg/model"
+	"SituationBak/shared/model"
 
 	"gorm.io/gorm"
 )

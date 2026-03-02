@@ -9,7 +9,7 @@ import (
 
 // SetupRoutes 配置路由
 func SetupRoutes(app *fiber.App) {
-	// 全局中间件
+	// 全局中间�?
 	app.Use(middleware.RecoveryMiddleware())
 	app.Use(middleware.LoggerMiddleware())
 	app.Use(middleware.CORSMiddleware())
@@ -18,7 +18,7 @@ func SetupRoutes(app *fiber.App) {
 	// Swagger 文档路由
 	setupSwagger(app)
 
-	// 健康检查
+	// 健康检�?
 	app.Get("/health", func(c fiber.Ctx) error {
 		return c.JSON(fiber.Map{
 			"status":  "ok",
@@ -37,7 +37,7 @@ func SetupRoutes(app *fiber.App) {
 	favoriteHandler := handler.NewFavoriteHandler()
 	proxyHandler := handler.NewProxyHandler()
 
-	// 认证路由（无需认证）
+	// 认证路由（无需认证�?
 	auth := api.Group("/auth")
 	auth.Post("/register", authHandler.Register)
 	auth.Post("/login", authHandler.Login)
@@ -56,7 +56,7 @@ func SetupRoutes(app *fiber.App) {
 	user.Get("/settings", userHandler.GetSettings)
 	user.Put("/settings", userHandler.UpdateSettings)
 
-	// 卫星路由（无需认证）
+	// 卫星路由（无需认证�?
 	satellites := api.Group("/satellites")
 	satellites.Get("/", satelliteHandler.GetSatellites)
 	satellites.Get("/search", satelliteHandler.SearchSatellites)

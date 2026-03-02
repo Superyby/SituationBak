@@ -3,12 +3,12 @@ package middleware
 import (
 	"time"
 
-	"SituationBak/internal/pkg/logger"
-	"SituationBak/internal/pkg/utils"
+	"SituationBak/shared/logger"
+	"SituationBak/shared/utils"
 	"github.com/gofiber/fiber/v3"
 )
 
-// LoggerMiddleware 请求日志中间件
+// LoggerMiddleware 请求日志中间�?
 func LoggerMiddleware() fiber.Handler {
 	return func(c fiber.Ctx) error {
 		start := time.Now()

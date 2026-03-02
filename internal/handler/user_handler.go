@@ -3,18 +3,18 @@ package handler
 import (
 	"SituationBak/internal/dto/request"
 	"SituationBak/internal/middleware"
-	"SituationBak/internal/pkg/errors"
-	"SituationBak/internal/pkg/utils"
+	"SituationBak/shared/errors"
+	"SituationBak/shared/utils"
 	"SituationBak/internal/service"
 	"github.com/gofiber/fiber/v3"
 )
 
-// UserHandler 用户处理器
+// UserHandler 用户处理�?
 type UserHandler struct {
 	userService *service.UserService
 }
 
-// NewUserHandler 创建用户处理器实例
+// NewUserHandler 创建用户处理器实�?
 func NewUserHandler() *UserHandler {
 	return &UserHandler{
 		userService: service.NewUserService(),
@@ -90,11 +90,11 @@ func (h *UserHandler) ChangePassword(c fiber.Ctx) error {
 	}
 
 	if req.OldPassword == "" || req.NewPassword == "" {
-		return utils.Fail(c, errors.CodeInvalidParams, "旧密码和新密码不能为空")
+		return utils.Fail(c, errors.CodeInvalidParams, "旧密码和新密码不能为�?)
 	}
 
 	if len(req.NewPassword) < 6 {
-		return utils.Fail(c, errors.CodeInvalidParams, "新密码长度至少6个字符")
+		return utils.Fail(c, errors.CodeInvalidParams, "新密码长度至�?个字�?)
 	}
 
 	err := h.userService.ChangePassword(userID, &req)

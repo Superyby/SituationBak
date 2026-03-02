@@ -8,13 +8,13 @@ import (
 	"os/signal"
 	"syscall"
 
-	"SituationBak/pkg/config"
-	"SituationBak/pkg/database"
-	"SituationBak/pkg/logger"
-	"SituationBak/pkg/model"
 	"SituationBak/services/auth/internal/repository"
 	"SituationBak/services/auth/internal/server"
 	"SituationBak/services/auth/internal/service"
+	"SituationBak/shared/config"
+	"SituationBak/shared/database"
+	"SituationBak/shared/logger"
+	"SituationBak/shared/model"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -48,7 +48,7 @@ func main() {
 	)
 
 	// 初始化数据库
-	if err := database.InitMySQL(&cfg.Database); err != nil {
+	if _, err := database.InitMySQL(&cfg.Database); err != nil {
 		logger.Fatal("初始化MySQL失败", logger.Err(err))
 	}
 	defer database.Close()

@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"SituationBak/pkg/errors"
+	"SituationBak/shared/errors"
 
 	"github.com/gofiber/fiber/v3"
 	"google.golang.org/grpc/codes"

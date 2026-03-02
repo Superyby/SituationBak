@@ -7,11 +7,11 @@ import (
 	"os/signal"
 	"syscall"
 
-	"SituationBak/pkg/config"
-	"SituationBak/pkg/logger"
 	"SituationBak/services/gateway/internal/client"
 	"SituationBak/services/gateway/internal/handler"
 	"SituationBak/services/gateway/internal/middleware"
+	"SituationBak/shared/config"
+	"SituationBak/shared/logger"
 
 	"github.com/gofiber/fiber/v3"
 )

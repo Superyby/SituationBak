@@ -3,13 +3,13 @@ package middleware
 import (
 	"runtime/debug"
 
-	"SituationBak/internal/pkg/errors"
-	"SituationBak/internal/pkg/logger"
-	"SituationBak/internal/pkg/utils"
+	"SituationBak/shared/errors"
+	"SituationBak/shared/logger"
+	"SituationBak/shared/utils"
 	"github.com/gofiber/fiber/v3"
 )
 
-// RecoveryMiddleware 异常恢复中间件
+// RecoveryMiddleware 异常恢复中间�?
 func RecoveryMiddleware() fiber.Handler {
 	return func(c fiber.Ctx) error {
 		defer func() {
@@ -24,7 +24,7 @@ func RecoveryMiddleware() fiber.Handler {
 				)
 
 				// 返回错误响应
-				_ = utils.Fail(c, errors.CodeInternalError, "服务器内部错误")
+				_ = utils.Fail(c, errors.CodeInternalError, "服务器内部错�?)
 			}
 		}()
 

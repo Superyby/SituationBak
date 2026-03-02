@@ -7,8 +7,8 @@ import (
 	"SituationBak/internal/dto/request"
 	"SituationBak/internal/dto/response"
 	"SituationBak/internal/model"
-	"SituationBak/internal/pkg/errors"
-	"SituationBak/internal/pkg/utils"
+	"SituationBak/shared/errors"
+	"SituationBak/shared/utils"
 	"SituationBak/internal/repository"
 	"github.com/golang-jwt/jwt/v5"
 )
@@ -37,7 +37,7 @@ type Claims struct {
 
 // Register 用户注册
 func (s *AuthService) Register(req *request.RegisterRequest) (*response.LoginResponse, error) {
-	// 检查用户名是否已存在
+	// 检查用户名是否已存�?
 	exists, err := s.userRepo.ExistsByUsername(req.Username)
 	if err != nil {
 		return nil, errors.ErrInternal(err)
@@ -97,12 +97,12 @@ func (s *AuthService) Login(req *request.LoginRequest) (*response.LoginResponse,
 		return nil, errors.WithCode(errors.CodePasswordWrong)
 	}
 
-	// 检查用户状态
+	// 检查用户状�?
 	if !user.IsActive {
 		return nil, errors.New(errors.CodeForbidden, "账号已被禁用")
 	}
 
-	// 更新最后登录时间
+	// 更新最后登录时�?
 	_ = s.userRepo.UpdateLastLogin(user.ID)
 
 	// 生成Token

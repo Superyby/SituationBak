@@ -25,7 +25,7 @@ func (Favorite) TableName() string {
 	return "favorites"
 }
 
-// BeforeCreate 创建前钩子
+// BeforeCreate 创建前钩�?
 func (f *Favorite) BeforeCreate(tx *gorm.DB) error {
 	f.CreatedAt = time.Now()
 	return nil

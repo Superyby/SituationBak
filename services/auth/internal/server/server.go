@@ -3,8 +3,8 @@ package server
 import (
 	"context"
 
-	"SituationBak/pkg/errors"
 	"SituationBak/services/auth/internal/service"
+	"SituationBak/shared/errors"
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -139,7 +139,7 @@ func mapToGRPCCode(code int) codes.Code {
 		return codes.InvalidArgument
 	case errors.CodeNotFound, errors.CodeUserNotFound:
 		return codes.NotFound
-	case errors.CodeAlreadyExists, errors.CodeUserExists, errors.CodeEmailExists, errors.CodeUsernameExist:
+	case errors.CodeAlreadyExists, errors.CodeEmailExists, errors.CodeUsernameExist:
 		return codes.AlreadyExists
 	case errors.CodeUnauthorized, errors.CodeTokenExpired, errors.CodeTokenInvalid, errors.CodeLoginFailed, errors.CodePasswordWrong:
 		return codes.Unauthenticated

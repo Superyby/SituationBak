@@ -4,8 +4,8 @@ import (
 	"context"
 	"strings"
 
-	"SituationBak/pkg/errors"
 	"SituationBak/services/gateway/internal/client"
+	"SituationBak/shared/errors"
 
 	"github.com/gofiber/fiber/v3"
 )

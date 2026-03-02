@@ -9,12 +9,12 @@ import (
 type MessageType string
 
 const (
-	// 客户端 -> 服务端
+	// 客户�?-> 服务�?
 	MessageTypePing        MessageType = "ping"
 	MessageTypeSubscribe   MessageType = "subscribe"
 	MessageTypeUnsubscribe MessageType = "unsubscribe"
 
-	// 服务端 -> 客户端
+	// 服务�?-> 客户�?
 	MessageTypePong            MessageType = "pong"
 	MessageTypeSatelliteUpdate MessageType = "satellite_update"
 	MessageTypeNotification    MessageType = "notification"
@@ -71,7 +71,7 @@ type ErrorPayload struct {
 	Message string `json:"message"`
 }
 
-// NewMessage 创建新消息
+// NewMessage 创建新消�?
 func NewMessage(msgType MessageType, payload interface{}) (*Message, error) {
 	var payloadBytes json.RawMessage
 	if payload != nil {

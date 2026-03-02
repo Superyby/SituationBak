@@ -3,18 +3,18 @@ package handler
 import (
 	"strconv"
 
-	"SituationBak/internal/pkg/errors"
-	"SituationBak/internal/pkg/utils"
+	"SituationBak/shared/errors"
+	"SituationBak/shared/utils"
 	"SituationBak/internal/service"
 	"github.com/gofiber/fiber/v3"
 )
 
-// SatelliteHandler 卫星处理器
+// SatelliteHandler 卫星处理�?
 type SatelliteHandler struct {
 	satelliteService *service.SatelliteService
 }
 
-// NewSatelliteHandler 创建卫星处理器实例
+// NewSatelliteHandler 创建卫星处理器实�?
 func NewSatelliteHandler() *SatelliteHandler {
 	return &SatelliteHandler{
 		satelliteService: service.NewSatelliteService(),
@@ -90,7 +90,7 @@ func (h *SatelliteHandler) GetSatelliteTLE(c fiber.Ctx) error {
 // @Summary 搜索卫星
 // @Tags 卫星
 // @Produce json
-// @Param q query string true "搜索关键词"
+// @Param q query string true "搜索关键�?
 // @Param page query int false "页码" default(1)
 // @Param page_size query int false "每页数量" default(20)
 // @Success 200 {object} utils.Response
@@ -98,7 +98,7 @@ func (h *SatelliteHandler) GetSatelliteTLE(c fiber.Ctx) error {
 func (h *SatelliteHandler) SearchSatellites(c fiber.Ctx) error {
 	query := c.Query("q")
 	if query == "" {
-		return utils.Fail(c, errors.CodeInvalidParams, "搜索关键词不能为空")
+		return utils.Fail(c, errors.CodeInvalidParams, "搜索关键词不能为�?)
 	}
 
 	page, pageSize := utils.GetPagination(c)

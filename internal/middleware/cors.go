@@ -6,7 +6,7 @@ import (
 	"github.com/gofiber/fiber/v3/middleware/cors"
 )
 
-// CORSMiddleware CORS中间件
+// CORSMiddleware CORS中间�?
 func CORSMiddleware() fiber.Handler {
 	cfg := config.GlobalConfig.CORS
 

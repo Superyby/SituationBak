@@ -3,11 +3,11 @@ package service
 import (
 	"time"
 
-	"SituationBak/pkg/config"
-	"SituationBak/pkg/errors"
-	"SituationBak/pkg/model"
-	"SituationBak/pkg/utils"
 	"SituationBak/services/auth/internal/repository"
+	"SituationBak/shared/config"
+	"SituationBak/shared/errors"
+	"SituationBak/shared/model"
+	"SituationBak/shared/utils"
 
 	"github.com/golang-jwt/jwt/v5"
 )

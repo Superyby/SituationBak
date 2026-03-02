@@ -3,9 +3,9 @@ package handler
 import (
 	"context"
 
-	"SituationBak/pkg/errors"
 	"SituationBak/services/gateway/internal/client"
 	"SituationBak/services/gateway/internal/middleware"
+	"SituationBak/shared/errors"
 
 	"github.com/gofiber/fiber/v3"
 )
